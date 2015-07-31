@@ -3,6 +3,7 @@
 
 syms th1 th2 th3 th4 th5 th6 real
 syms xb yb thb lb hb real
+% syms d0 d1 d2 d3 d3_offset d4 d5 d6  
 syms v w real
 syms Rw T positive 
 
