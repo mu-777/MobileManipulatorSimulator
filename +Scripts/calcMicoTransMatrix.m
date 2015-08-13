@@ -122,7 +122,7 @@ for i = 1:size(DJDq, 1)
     for l = 1:size(DJDq, 2)
         for k = 1:size(DJDq, 3)
             DJDq(i, l, k) = diff(J(i, l), robotState(k));
-            fprintf(fileID, 'DJDq[%i, %i, %i] = %s\n\n', i, j, k, char(DJDq(i,j,k)));
+            fprintf(fileID, 'DJDq[%i, %i, %i] = %s\n\n', i-1, j-1, k-1, char(DJDq(i,j,k)));
         end
     end    
 end
@@ -136,7 +136,7 @@ for i = 1:size(DJsqDq, 1)
     for j = 1:size(DJsqDq, 2)
         for k = 1:size(DJsqDq, 3)
             DJsqDq(i, j, k) = diff(Jsquare(i, j), robotState(k));
-            fprintf(fileID, 'DJsqDq[%i, %i, %i] = %s\n\n', i, j, k, char(DJsqDq(i,j,k)));
+            fprintf(fileID, 'DJsqDq[%i, %i, %i] = %s\n\n', i-1, j-1, k-1, char(DJsqDq(i,j,k)));
         end
     end    
 end
@@ -149,13 +149,12 @@ for i = 1:size(DJarmDq, 1)
     for j = 1:size(DJarmDq, 2)
         for k = 1:size(DJarmDq, 3)
             DJarmDq(i, j, k) = diff(Jarm(i, j), robotState(k));
-            fprintf(fileID, 'DJarmDq[%i, %i, %i] = %s\n\n', i, j, k, char(DJarmDq(i,j,k)));
+            fprintf(fileID, 'DJarmDq[%i, %i, %i] = %s\n\n', i-1, j-1, k-1, char(DJarmDq(i,j,k)));
         end
     end    
 end
 fprintf(fileID, '\nend');
 fclose(fileID);
-
 
 
 
