@@ -9,32 +9,26 @@ syms Rw T positive
 
 d0 = 0.1544;
 d1 = -0.1181;
-d2 = 0.4100;
-d3_offset = -0.0098;
-d3 = 0.2073;
-d4 =0.0743;
-d5 = 0.0743;
-d6 = 0.1687;
-j5_bend =  degtorad(55);
-j6_bend = degtorad(35);
+d2 = 0.2900;
+d3_offset = -0.0070;
+d3 = 0.1233;
+d4 =0.0741;
+d5 = 0.0741;
+d6 = 0-.1600;
+j5_bend =  degtorad(-55);
+j6_bend = degtorad(55);
 
 TREE = eye(4);
-% origin to arm_base_on_mobile
+% origin to arm_base
 Trans(:, :, 1) = [ cos(thb), -sin(thb), 0, xb + lb*cos(thb);
     sin(thb),  cos(thb), 0, yb + lb*sin(thb);
     0,         0, 1,                hb;
     0,         0, 0,                1];
 
-%  arm_base_on_mobile to arm_base
-Trans(:, :, 1) = Trans(:, :, 1) * [cos(pi/2), -sin(pi/2), 0,  0;
-    sin(pi/2), cos(pi/2), 0, 0;
-    0, 0, 1, 0;
-    0, 0, 0, 1];
-
 %arm_base to j1
 Trans(:, :, 1) = Trans(:, :, 1) * [ cos(th1), -sin(th1), 0, 0;
     -sin(th1),  -cos(th1), 0,       0;
-    0,         0, -1, d0;
+    0,         0, -1,     d0;
     0,         0, 0,       1];
 
 %j1 to j2
@@ -46,13 +40,13 @@ Trans(:, :, 2) =[ sin(th2),  cos(th2), 0, 0;
 % j2 to j3
 Trans(:, :, 3)=[ -cos(th3), sin(th3), 0, d2;
     sin(th3),  cos(th3), 0,  0;
-    0,         0, 1,  0;
+    0,         0, -1,  0;
     0,         0, 0,  1];
 
 %j3 to j3.5
-Trans(:, :, 4)= [ 1, 0, 0, d3_offset;
+Trans(:, :, 4)= [ 1, 0, 0, 0;
     0, 1, 0, 0;
-    0, 0, 1, 0;
+    0, 0, 1, d3_offset;
     0, 0, 0, 1];
 
 % j3.5 to j4
@@ -62,9 +56,9 @@ Trans(:, :, 4) = Trans(:, :, 4) * [0, 0, -1, d3
     0, 0, 0, 1];
 
 %j4 to j5
-Trans(:, :, 5)= [ cos(j5_bend)*cos(th5), cos(j5_bend)*-sin(th5), sin(j5_bend), cos(j5_bend)*d4;
+Trans(:, :, 5)= [ cos(j5_bend)*cos(th5), cos(j5_bend)*-sin(th5), sin(j5_bend), cos(-j5_bend)*d4;
     sin(th5), cos(th5), 0, 0;
-    -sin(j5_bend)*cos(th5), sin(j5_bend)*sin(th5), cos(j5_bend), -sin(j5_bend)*d4;
+    -sin(j5_bend)*cos(th5), sin(j5_bend)*sin(th5), cos(j5_bend), -sin(-j5_bend)*d4;
     0, 0, 0, 1];
 
 %j5 to j6
@@ -74,9 +68,9 @@ Trans(:, :, 6)= [cos(j6_bend) * cos(th6), cos(j6_bend) * -sin(th6), sin(j6_bend)
     0, 0, 0, 1];
 
 % j6 to ee
-Trans(:, :, 7)= [ 1, 0, 0, d6;
+Trans(:, :, 7)= [ -1, 0, 0, 0;
     0, 1, 0,  0;
-    0, 0, 1,  0;
+    0, 0, -1,  d6;
     0, 0, 0,  1];
 
 
@@ -149,7 +143,7 @@ end
 fprintf(fileID, '\nend');
 fclose(fileID);
 
-fileID = fopen('DJarmDq.txt','a');
+fileID = fopen('./+Results/DJarmDq.txt','a');
 DJarmDq = sym(zeros(size(Jarm, 1), size(Jarm, 2), size(robotState, 1)));
 for i = 1:size(DJarmDq, 1)
     for j = 1:size(DJarmDq, 2)
