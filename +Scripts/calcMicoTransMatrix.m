@@ -1,4 +1,4 @@
-%   ‚±‚±‚És—ñ‘‚¢‚Ä‚­‚ê‚Ä‚¢‚é
+%   ã“ã“ã«è¡Œåˆ—æ›¸ã„ã¦ãã‚Œã¦ã„ã‚‹
 %   https://github.com/Kinovarobotics/kinova-ros/blob/master/jaco_driver/src/jaco_arm_kinematics.cpp
 
 syms th1 th2 th3 th4 th5 th6 real
@@ -74,7 +74,7 @@ Trans(:, :, 7)= [ -1, 0, 0, 0;
     0, 0, 0,  1];
 
 
-%% ƒOƒ[ƒoƒ‹À•WŒn‚©‚çèæÀ•WŒn‚Ü‚Å‚Ì•ÏŠ·s—ñ
+%% ã‚°ãƒ­ãƒ¼ãƒãƒ«åº§æ¨™ç³»ã‹ã‚‰æ‰‹å…ˆåº§æ¨™ç³»ã¾ã§ã®å¤‰æ›è¡Œåˆ—
 for i=1:size(Trans, 3)
     TREE = TREE*Trans(:, :, i);
 end
@@ -87,19 +87,19 @@ pitchREE = simplify( atan( -TREE(3,1)/sqrt(TREE(3,2)^2 + TREE(3,3)^2) ))
 yawREE   = simplify( atan(  TREE(2,1)/TREE(1,1) ))
 
 
-%% ƒ„ƒRƒrs—ñ‚ÌŒvZ
+%% ãƒ¤ã‚³ãƒ“è¡Œåˆ—ã®è¨ˆç®—
 
 eeState = [xREE; yREE; zREE; rollREE; pitchREE; yawREE];
 
-% J_arm‚Ì“±o
+% J_armã®å°å‡º
 armState = [th1; th2; th3; th4; th5; th6];
 Jarm = jacobian(eeState , armState);
 
-% J_base‚Ì“±o
+% J_baseã®å°å‡º
 baseState = [xb ; yb; thb];
 Jbase = jacobian(eeState , baseState);
 
-% J‚Ì“±o
+% Jã®å°å‡º
 Tnonholo = [ cos(thb) , 0; sin(thb) , 0; 0, 1];
 Tconvert = [ Rw/2 Rw/2; Rw/T -Rw/T];
 Jbase_nonholo = Jbase*Tnonholo*Tconvert;  
@@ -110,7 +110,7 @@ J = simplify([Jarm , Jbase_nonholo]);
 fileID = fopen('./+Results/J.txt','a');
 for i = 1:size(J, 1)
     for j = 1:size(J,2)
-        fprintf(fileID, 'J[%i, %i] = %s;\n\n', i, j, char(J(i,j)));
+        fprintf(fileID, 'J[%i, %i] = %s\n\n', i, j, char(J(i,j)));
     end    
 end
 fprintf(fileID, '\nend');
@@ -122,7 +122,7 @@ for i = 1:size(DJDq, 1)
     for l = 1:size(DJDq, 2)
         for k = 1:size(DJDq, 3)
             DJDq(i, l, k) = diff(J(i, l), robotState(k));
-            fprintf(fileID, 'DJDq[%i, %i, %i] = %s;\n\n', i, j, k, char(DJDq(i,j,k)));
+            fprintf(fileID, 'DJDq[%i, %i, %i] = %s\n\n', i, j, k, char(DJDq(i,j,k)));
         end
     end    
 end
@@ -136,7 +136,7 @@ for i = 1:size(DJsqDq, 1)
     for j = 1:size(DJsqDq, 2)
         for k = 1:size(DJsqDq, 3)
             DJsqDq(i, j, k) = diff(Jsquare(i, j), robotState(k));
-            fprintf(fileID, 'DJsqDq[%i, %i, %i] = %s;\n\n', i, j, k, char(DJsqDq(i,j,k)));
+            fprintf(fileID, 'DJsqDq[%i, %i, %i] = %s\n\n', i, j, k, char(DJsqDq(i,j,k)));
         end
     end    
 end
@@ -149,7 +149,7 @@ for i = 1:size(DJarmDq, 1)
     for j = 1:size(DJarmDq, 2)
         for k = 1:size(DJarmDq, 3)
             DJarmDq(i, j, k) = diff(Jarm(i, j), robotState(k));
-            fprintf(fileID, 'DJarmDq[%i, %i, %i] = %s;\n\n', i, j, k, char(DJarmDq(i,j,k)));
+            fprintf(fileID, 'DJarmDq[%i, %i, %i] = %s\n\n', i, j, k, char(DJarmDq(i,j,k)));
         end
     end    
 end
