@@ -110,7 +110,7 @@ J = simplify([Jarm , Jbase_nonholo]);
 fileID = fopen('./+Results/J.txt','a');
 for i = 1:size(J, 1)
     for j = 1:size(J,2)
-        fprintf(fileID, 'J[%i, %i] = %s\n\n', i, j, char(J(i,j)));
+        fprintf(fileID, 'J[%i, %i] = %s\n\n', i-1, j-1, char(J(i,j)));
     end    
 end
 fprintf(fileID, '\nend');
