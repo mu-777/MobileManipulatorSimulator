@@ -116,8 +116,8 @@ baseState = [xb ; yb; thb];
 Jbase = jacobian(eeState , baseState);
 
 % Jの導�?
-% Tnonholo = [ cos(thb) , 0; sin(thb) , 0; 0, 1];
-Tnonholo = [ cos(thb) , 0; sin(thb) , 0; 0, 1]*[ Rw/2 Rw/2; Rw/T -Rw/T];
+Tnonholo = [ cos(thb) , 0; sin(thb) , 0; 0, 1];
+% Tnonholo = [ cos(thb) , 0; sin(thb) , 0; 0, 1]*[ Rw/2 Rw/2; Rw/T -Rw/T];
 Jbase_nonholo = Jbase*Tnonholo;  
 
 robotState = [armState; baseState];

@@ -2,8 +2,10 @@ function figObj = robotVel( figNum, is, t, robotVel )
 %DRAWGRAPH_ROBOTVEL この関数の概要をここに記述
 %   詳細説明をここに記述
 
-v = (robotVel(:,7) + robotVel(:,8))*is.Rw/2;
-w = (robotVel(:,7) - robotVel(:,8))*is.Rw/is.T;
+% v = (robotVel(:,7) + robotVel(:,8))*is.Rw/2;
+% w = (robotVel(:,7) - robotVel(:,8))*is.Rw/is.T;
+v = robotVel(:,7);
+w = robotVel(:,8);
 
 if isempty(figNum)
     figObj = figure();
