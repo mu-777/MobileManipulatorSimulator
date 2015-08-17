@@ -7,7 +7,7 @@ syms xb yb thb lb hb real
 syms v w real
 syms Rw T positive 
 
-for_matlab = true;
+for_matlab = false;
 if for_matlab
     scale = 1000; % [m] -> [mm]
 else
