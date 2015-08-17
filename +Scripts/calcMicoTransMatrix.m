@@ -1,4 +1,4 @@
-%   ここに行列書いてくれている
+%   ここに行�?書�?��くれて�?��
 %   https://github.com/Kinovarobotics/kinova-ros/blob/master/jaco_driver/src/jaco_arm_kinematics.cpp
 
 syms th1 th2 th3 th4 th5 th6 real
@@ -6,6 +6,8 @@ syms xb yb thb lb hb real
 % syms d0 d1 d2 d3 d3_offset d4 d5 d6  
 syms v w real
 syms Rw T positive 
+
+for_matlab = true;
 
 d0 = 0.1544;
 d1 = -0.1181;
@@ -74,35 +76,44 @@ Trans(:, :, 7)= [ -1, 0, 0, 0;
     0, 0, 0,  1];
 
 
-%% グローバル座標系から手先座標系までの変換行列
+%% グローバル座標系から手�?座標系までの変換行�?
 for i=1:size(Trans, 3)
     TREE = TREE*Trans(:, :, i);
 end
 
-xREE = simplify( TREE(1,4) )
-yREE = simplify( TREE(2,4) )
-zREE = simplify( TREE(3,4) )
-rollREE  = simplify( atan(TREE(3,2)/TREE(3,3)) )
-pitchREE = simplify( atan( -TREE(3,1)/sqrt(TREE(3,2)^2 + TREE(3,3)^2) )) 
-yawREE   = simplify( atan(  TREE(2,1)/TREE(1,1) ))
+xREE = simplify( TREE(1,4) );
+yREE = simplify( TREE(2,4) );
+zREE = simplify( TREE(3,4) );
+rollREE  = simplify( atan(TREE(3,2)/TREE(3,3)) );
+pitchREE = simplify( atan( -TREE(3,1)/sqrt(TREE(3,2)^2 + TREE(3,3)^2) )) ;
+yawREE   = simplify( atan(  TREE(2,1)/TREE(1,1) ));
+fileID = fopen('./+Results/p_ee.txt','a');
+fprintf(fileID, 'xREE = %s\n\n', char(xREE));
+fprintf(fileID, 'yREE = %s\n\n', char(yREE));
+fprintf(fileID, 'zREE = %s\n\n', char(zREE));
+fprintf(fileID, 'rollREE = %s\n\n', char(rollREE));
+fprintf(fileID, 'pitchREE = %s\n\n', char(pitchREE));
+fprintf(fileID, 'yawREE = %s\n\n', char(yawREE));
+fprintf(fileID, '\nend');
+fclose(fileID);
 
-
-%% ヤコビ行列の計算
+%% ヤコビ行�?の計�?
 
 eeState = [xREE; yREE; zREE; rollREE; pitchREE; yawREE];
 
-% J_armの導出
+% J_armの導�?
 armState = [th1; th2; th3; th4; th5; th6];
 Jarm = jacobian(eeState , armState);
 
-% J_baseの導出
+% J_baseの導�?
 baseState = [xb ; yb; thb];
 Jbase = jacobian(eeState , baseState);
 
-% Jの導出
+% Jの導�?
 Tnonholo = [ cos(thb) , 0; sin(thb) , 0; 0, 1];
-Tconvert = [ Rw/2 Rw/2; Rw/T -Rw/T];
-Jbase_nonholo = Jbase*Tnonholo*Tconvert;  
+% Tconvert = [ Rw/2 Rw/2; Rw/T -Rw/T];
+%Jbase_nonholo = Jbase*Tnonholo*Tconvert;  
+Jbase_nonholo = Jbase*Tnonholo;  
 
 robotState = [armState; baseState];
 J = simplify([Jarm , Jbase_nonholo]);
@@ -110,7 +121,11 @@ J = simplify([Jarm , Jbase_nonholo]);
 fileID = fopen('./+Results/J.txt','a');
 for i = 1:size(J, 1)
     for j = 1:size(J,2)
-        fprintf(fileID, 'J[%i, %i] = %s\n\n', i-1, j-1, char(J(i,j)));
+        if for_matlab
+            fprintf(fileID, 'J[%i, %i] = %s;\n\n', i, j, char(J(i,j)));
+        else
+            fprintf(fileID, 'J[%i, %i] = %s\n\n', i-1, j-1, char(J(i,j)));
+        end
     end    
 end
 fprintf(fileID, '\nend');
@@ -122,7 +137,11 @@ for i = 1:size(DJDq, 1)
     for l = 1:size(DJDq, 2)
         for k = 1:size(DJDq, 3)
             DJDq(i, l, k) = diff(J(i, l), robotState(k));
-            fprintf(fileID, 'DJDq[%i, %i, %i] = %s\n\n', i-1, j-1, k-1, char(DJDq(i,j,k)));
+            if for_matlab
+                fprintf(fileID, 'DJDq[%i, %i, %i] = %s;\n\n', i, j, k, char(DJDq(i,j,k)));
+            else
+                fprintf(fileID, 'DJDq[%i, %i, %i] = %s\n\n', i-1, j-1, k-1, char(DJDq(i,j,k)));
+            end
         end
     end    
 end
@@ -136,7 +155,11 @@ for i = 1:size(DJsqDq, 1)
     for j = 1:size(DJsqDq, 2)
         for k = 1:size(DJsqDq, 3)
             DJsqDq(i, j, k) = diff(Jsquare(i, j), robotState(k));
-            fprintf(fileID, 'DJsqDq[%i, %i, %i] = %s\n\n', i-1, j-1, k-1, char(DJsqDq(i,j,k)));
+            if for_matlab
+                fprintf(fileID, 'DJsqDq[%i, %i, %i] = %s;\n\n', i, j, k, char(DJsqDq(i,j,k)));
+            else
+                fprintf(fileID, 'DJsqDq[%i, %i, %i] = %s\n\n', i-1, j-1, k-1, char(DJsqDq(i,j,k)));
+            end
         end
     end    
 end
