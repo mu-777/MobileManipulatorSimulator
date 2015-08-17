@@ -6,21 +6,22 @@ function is = getInitSettings( )
 is = getInitConfig();
 
 %% FOR CONTROL
-is.Kpdgain = 1*diag([1,1,1,0.5,0.5,0.5]);
+% is.Kpdgain = 1*diag([1,1,1,0.5,0.5,0.5]);
+is.Kpdgain = 2*diag([1,1,1,0.5,0.5,0.5]);
 is.Kredundancy = 1*10e-7 * diag([1,1,1,1,1,1,1,1]);
 
 % eeRefGenerationMethodは，+Methodで定義
 % もし付け加えたければ，CControllerのgenerateEERef関数を参照
-eeRefGenerationMethodNum = 3;
+eeRefGenerationMethodNum = 3; % 1~
 eeRefGenerationMethodList = {
     'stay';
-    'myPath';
+    'myPath'; % See Method.getEERef_fromMyPath
     'bvh'};
 is.eeRefGenerationMethod = eeRefGenerationMethodList{eeRefGenerationMethodNum};
 
 % inputGenerationMethodは，+Methodで定義
 % もし付け加えたければ，CControllerのgenerateInput関数を参照
-inputGenerationMethodNum = 3;
+inputGenerationMethodNum = 1;  % 1~
 inputGenerationMethodList = {
     'V=0';                               % 冗長性使わない。0の並んだベクトル
     'V=sqrt(det(JJ^T))usingDJsqDq';      % det(J*J')の微分をDJsqDq解析的に計算して出したやつ(DJsqDq間違えてるくさい)
@@ -31,12 +32,12 @@ is.inputGenerationMethod = inputGenerationMethodList{inputGenerationMethodNum};
 
 %% FOR INITIARIZE
 load('./+DATA/000_bvhData.mat', 'targetState')
-robotInit.state(1) = 30*is.DEG2RAD;
-robotInit.state(2) = acos( (targetState(1,3) - is.Heightb - is.d0 - is.d1)/is.d2 );
-robotInit.state(3) = 90*is.DEG2RAD - robotInit.state(2);
-robotInit.state(4) =  0*is.DEG2RAD;
-robotInit.state(5) =-30*is.DEG2RAD;
-robotInit.state(6) =  0*is.DEG2RAD;
+robotInit.state(1) = (-(0)+180)*is.DEG2RAD;
+robotInit.state(2) = ((-90)+270)*is.DEG2RAD;
+robotInit.state(3) = (-(0)+90)*is.DEG2RAD;
+robotInit.state(4) =  (-(0)+180)*is.DEG2RAD;
+robotInit.state(5) =(-(90)+180)*is.DEG2RAD;
+robotInit.state(6) =  (-(0)+270)*is.DEG2RAD;
 robotInit.state(7:9) = [0, 0, 0];
 eeState_temp = Calculator.getEEState(robotInit.state);
 is.robotInit.state = [robotInit.state(1:6),...
