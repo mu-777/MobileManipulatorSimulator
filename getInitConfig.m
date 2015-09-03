@@ -26,7 +26,7 @@ ic.sceneAxisSize = [ sceneXmin, sceneXmax, sceneYmin, sceneYmax, sceneZmin, scen
 
 %% Robot Config
 ic.Lengthb = 800;
-ic.Heightb = 500;
+ic.Heightb = 323; % 500;
 ic.Widthb = 600;
 
 ic.d0 = 154.4;
@@ -41,9 +41,9 @@ ic.d6 = -160;
 ic.j5_bend = -55 * ic.DEG2RAD;
 ic.j6_bend = 55 * ic.DEG2RAD;
 
-ic.Rw =50;
-ic.T = 300;
-ic.lb = 0.2*(ic.Lengthb/2);
+ic.Rw = 160; % 50;
+ic.T = 340; % 300;
+ic.lb = 150; % 0.2*(ic.Lengthb/2);
 
 
 %% Return

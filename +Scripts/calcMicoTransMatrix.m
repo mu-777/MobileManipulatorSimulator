@@ -11,7 +11,7 @@ for_matlab = false;
 if for_matlab
     scale = 1000; % [m] -> [mm]
 else
-    scale = 1;
+    scale = 1000;
 end
 
 d0 = 0.1544*scale;

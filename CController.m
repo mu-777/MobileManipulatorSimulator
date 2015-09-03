@@ -55,7 +55,8 @@ classdef CController < handle
         % self.eeRef使わなかったのは，関数内で計算済みのeeRefを使うことを明示的に示すため
         function u = generateInput(self, eeRef, curRobotState)
             J = Calculator.getJ(curRobotState);
-            pinvJ = pinv(J);            
+            pinvJ = pinv(J);       
+%             disp(num2str(pinvJ))
             eeCurr.state = Calculator.getEEState(curRobotState);
             switch self.is.inputGenerationMethod
                 case 'V=0'
