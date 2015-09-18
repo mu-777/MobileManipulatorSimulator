@@ -14,7 +14,7 @@ else
     scale = 1;
 end
 
-d0 = 0.1544*scale;
+d0 = (0.1544 + 0.028)*scale;
 d1 = -0.1181*scale;
 d2 = 0.2900*scale;
 d3_offset = -0.0070*scale;
