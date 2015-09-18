@@ -14,14 +14,14 @@ else
     scale = 1;
 end
 
-d0 = (0.1544 + 0.028)*scale;
+d0 = 0.1544*scale;
 d1 = -0.1181*scale;
 d2 = 0.2900*scale;
 d3_offset = -0.0070*scale;
 d3 = 0.1233*scale;
 d4 =0.0741*scale;
 d5 = 0.0741*scale;
-d6 = -0.1600*scale;
+d6 = 0.1600*scale;
 j5_bend =  degtorad(-60);
 j6_bend = degtorad(60);
 
