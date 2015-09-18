@@ -11,7 +11,7 @@ for_matlab = false;
 if for_matlab
     scale = 1000; % [m] -> [mm]
 else
-    scale = 1000;
+    scale = 1;
 end
 
 d0 = 0.1544*scale;
@@ -22,8 +22,8 @@ d3 = 0.1233*scale;
 d4 =0.0741*scale;
 d5 = 0.0741*scale;
 d6 = 0.1600*scale;
-j5_bend =  degtorad(-55);
-j6_bend = degtorad(55);
+j5_bend =  degtorad(-60);
+j6_bend = degtorad(60);
 
 
 TREE = eye(4);
