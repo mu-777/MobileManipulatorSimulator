@@ -1,4 +1,4 @@
-%   ここに行�?書�?��くれて�?��
+%   ã“ã“ã«è¡Œå?æ›¸ã?¦ãã‚Œã¦ã?‚‹
 %   https://github.com/Kinovarobotics/kinova-ros/blob/master/jaco_driver/src/jaco_arm_kinematics.cpp
 
 syms th1 th2 th3 th4 th5 th6 real
@@ -21,7 +21,7 @@ d3_offset = -0.0070*scale;
 d3 = 0.1233*scale;
 d4 =0.0741*scale;
 d5 = 0.0741*scale;
-d6 = 0.1600*scale;
+d6 = -0.1600*scale;
 j5_bend =  degtorad(-60);
 j6_bend = degtorad(60);
 
@@ -82,7 +82,7 @@ Trans(:, :, 7)= [ -1, 0, 0, 0;
     0, 0, 0,  1];
 
 
-%% グローバル座標系から手�?座標系までの変換行�?
+%% ã‚°ãƒ­ãƒ¼ãƒãƒ«åº§æ¨™ç³»ã‹ã‚‰æ‰‹å?åº§æ¨™ç³»ã¾ã§ã®å¤‰æ›è¡Œå?
 for i=1:size(Trans, 3)
     TREE = TREE*Trans(:, :, i);
 end
@@ -103,19 +103,19 @@ fprintf(fileID, 'eeState(6) = %s;\n\n', char(yawREE));
 fprintf(fileID, '\nend');
 fclose(fileID);
 
-%% ヤコビ行�?の計�?
+%% ãƒ¤ã‚³ãƒ“è¡Œå?ã®è¨ˆç®?
 
 eeState = [xREE; yREE; zREE; rollREE; pitchREE; yawREE];
 
-% J_armの導�?
+% J_armã®å°Žå?
 armState = [th1; th2; th3; th4; th5; th6];
 Jarm = jacobian(eeState , armState);
 
-% J_baseの導�?
+% J_baseã®å°Žå?
 baseState = [xb ; yb; thb];
 Jbase = jacobian(eeState , baseState);
 
-% Jの導�?
+% Jã®å°Žå?
 % Tnonholo = [ cos(thb) , 0; sin(thb) , 0; 0, 1];
 Tnonholo = [ cos(thb) , 0; sin(thb) , 0; 0, 1]*[ Rw/2 Rw/2; Rw/T -Rw/T];
 Jbase_nonholo = Jbase*Tnonholo;  
