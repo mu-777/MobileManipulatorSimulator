@@ -43,9 +43,13 @@ myData.graphRobotVel(4);
 myData.graphManipulability(5, 0);
 
 %% View (see:CDataManager)
-myData.viewMobileManipulator(6, 1.0, [20, 60]);
+% myData.viewBVH(6, 1.0, [20, 60]);
+myData.viewMobileManipulator(6, 0.0, [20, 60]);
+% myData.viewMobileManipulatorWithBVH(6, 1.0, [20, 60]);
 
 %% Video (see:CDataManager)
+% myData.videoBVH([20,60]);
+% myData.videoMobileManipulator([20,60]);
 myData.videoMobileManipulatorWithBVH([20,60]);
 
 

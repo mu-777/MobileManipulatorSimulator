@@ -7,18 +7,24 @@ syms xb yb thb lb hb real
 syms v w real
 syms Rw T positive 
 
-for_matlab = true;
+for_matlab = false;
+if for_matlab
+    scale = 1000; % [m] -> [mm]
+else
+    scale = 1;
+end
 
-d0 = 0.1544;
-d1 = -0.1181;
-d2 = 0.2900;
-d3_offset = -0.0070;
-d3 = 0.1233;
-d4 =0.0741;
-d5 = 0.0741;
-d6 = 0.1600;
-j5_bend =  degtorad(-55);
-j6_bend = degtorad(55);
+d0 = 0.1544*scale;
+d1 = -0.1181*scale;
+d2 = 0.2900*scale;
+d3_offset = -0.0070*scale;
+d3 = 0.1233*scale;
+d4 =0.0741*scale;
+d5 = 0.0741*scale;
+d6 = 0.1600*scale;
+j5_bend =  degtorad(-60);
+j6_bend = degtorad(60);
+
 
 TREE = eye(4);
 % origin to arm_base
@@ -72,7 +78,7 @@ Trans(:, :, 6)= [cos(j6_bend) * cos(th6), cos(j6_bend) * -sin(th6), sin(j6_bend)
 % j6 to ee
 Trans(:, :, 7)= [ -1, 0, 0, 0;
     0, 1, 0,  0;
-    0, 0, -1,  d6;
+    0, 0, -1,  -d6;
     0, 0, 0,  1];
 
 
@@ -88,12 +94,12 @@ rollREE  = simplify( atan(TREE(3,2)/TREE(3,3)) );
 pitchREE = simplify( atan( -TREE(3,1)/sqrt(TREE(3,2)^2 + TREE(3,3)^2) )) ;
 yawREE   = simplify( atan(  TREE(2,1)/TREE(1,1) ));
 fileID = fopen('./+Results/p_ee.txt','a');
-fprintf(fileID, 'xREE = %s\n\n', char(xREE));
-fprintf(fileID, 'yREE = %s\n\n', char(yREE));
-fprintf(fileID, 'zREE = %s\n\n', char(zREE));
-fprintf(fileID, 'rollREE = %s\n\n', char(rollREE));
-fprintf(fileID, 'pitchREE = %s\n\n', char(pitchREE));
-fprintf(fileID, 'yawREE = %s\n\n', char(yawREE));
+fprintf(fileID, 'eeState(1) = %s;\n\n', char(xREE));
+fprintf(fileID, 'eeState(2) = %s;\n\n', char(yREE));
+fprintf(fileID, 'eeState(3) = %s;\n\n', char(zREE));
+fprintf(fileID, 'eeState(4) = %s;\n\n', char(rollREE));
+fprintf(fileID, 'eeState(5) = %s;\n\n', char(pitchREE));
+fprintf(fileID, 'eeState(6) = %s;\n\n', char(yawREE));
 fprintf(fileID, '\nend');
 fclose(fileID);
 
@@ -110,9 +116,8 @@ baseState = [xb ; yb; thb];
 Jbase = jacobian(eeState , baseState);
 
 % Jの導�?
-Tnonholo = [ cos(thb) , 0; sin(thb) , 0; 0, 1];
-% Tconvert = [ Rw/2 Rw/2; Rw/T -Rw/T];
-%Jbase_nonholo = Jbase*Tnonholo*Tconvert;  
+% Tnonholo = [ cos(thb) , 0; sin(thb) , 0; 0, 1];
+Tnonholo = [ cos(thb) , 0; sin(thb) , 0; 0, 1]*[ Rw/2 Rw/2; Rw/T -Rw/T];
 Jbase_nonholo = Jbase*Tnonholo;  
 
 robotState = [armState; baseState];
@@ -122,7 +127,7 @@ fileID = fopen('./+Results/J.txt','a');
 for i = 1:size(J, 1)
     for j = 1:size(J,2)
         if for_matlab
-            fprintf(fileID, 'J[%i, %i] = %s;\n\n', i, j, char(J(i,j)));
+            fprintf(fileID, 'J(%i, %i) = %s;\n\n', i, j, char(J(i,j)));
         else
             fprintf(fileID, 'J[%i, %i] = %s\n\n', i-1, j-1, char(J(i,j)));
         end
@@ -134,11 +139,11 @@ fclose(fileID);
 fileID = fopen('./+Results/DJDq.txt','a');
 DJDq = sym(zeros(size(J, 1), size(J, 2), size(robotState, 1)));
 for i = 1:size(DJDq, 1)
-    for l = 1:size(DJDq, 2)
+    for j = 1:size(DJDq, 2)
         for k = 1:size(DJDq, 3)
-            DJDq(i, l, k) = diff(J(i, l), robotState(k));
+            DJDq(i, j, k) = diff(J(i, j), robotState(k));
             if for_matlab
-                fprintf(fileID, 'DJDq[%i, %i, %i] = %s;\n\n', i, j, k, char(DJDq(i,j,k)));
+                fprintf(fileID, 'DJDq(%i, %i, %i) = %s;\n\n', i, j, k, char(DJDq(i,j,k)));
             else
                 fprintf(fileID, 'DJDq[%i, %i, %i] = %s\n\n', i-1, j-1, k-1, char(DJDq(i,j,k)));
             end
@@ -156,7 +161,7 @@ for i = 1:size(DJsqDq, 1)
         for k = 1:size(DJsqDq, 3)
             DJsqDq(i, j, k) = diff(Jsquare(i, j), robotState(k));
             if for_matlab
-                fprintf(fileID, 'DJsqDq[%i, %i, %i] = %s;\n\n', i, j, k, char(DJsqDq(i,j,k)));
+                fprintf(fileID, 'DJsqDq(%i, %i, %i) = %s;\n\n', i, j, k, char(DJsqDq(i,j,k)));
             else
                 fprintf(fileID, 'DJsqDq[%i, %i, %i] = %s\n\n', i-1, j-1, k-1, char(DJsqDq(i,j,k)));
             end
@@ -172,7 +177,11 @@ for i = 1:size(DJarmDq, 1)
     for j = 1:size(DJarmDq, 2)
         for k = 1:size(DJarmDq, 3)
             DJarmDq(i, j, k) = diff(Jarm(i, j), robotState(k));
-            fprintf(fileID, 'DJarmDq[%i, %i, %i] = %s\n\n', i-1, j-1, k-1, char(DJarmDq(i,j,k)));
+            if for_matlab
+                fprintf(fileID, 'DJarmDq(%i, %i, %i) = %s;\n\n', i, j, k, char(DJarmDq(i,j,k)));
+            else
+                fprintf(fileID, 'DJarmDq[%i, %i, %i] = %s\n\n', i-1, j-1, k-1, char(DJarmDq(i,j,k)));
+            end
         end
     end    
 end
